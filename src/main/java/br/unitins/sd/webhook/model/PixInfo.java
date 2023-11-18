@@ -1,4 +1,4 @@
-package br.unitins.sd.webhook.resource.model;
+package br.unitins.sd.webhook.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
