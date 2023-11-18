@@ -9,12 +9,18 @@
     <title>Pagamento</title>
 </head>
 <body>
-<h1>Hello World</h1>
-<form>
-    <label for="txid">TXID:</label>
-    <input type="text" id="txid" name="txid">
-    <input type="submit" value="Enviar" onclick="pay(event)">
-</form>
+<main>
+    <h1>Realizar pagamento</h1>
+    <form>
+        <div class="field">
+            <label for="txid">TXID</label>
+            <div>
+                <input type="text" id="txid" name="txid">
+                <button type="submit" onclick="pay(event)">Enviar</button>
+            </div>
+        </div>
+    </form>
+</main>
 <script src="/static/js/main.js"></script>
 </body>
 </html>
