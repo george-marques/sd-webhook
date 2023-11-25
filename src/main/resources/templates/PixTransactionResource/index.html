@@ -11,15 +11,12 @@
 <body>
 <main>
     <h1>Realizar pagamento</h1>
-    <form>
-        <div class="field">
-            <label for="txid">TXID</label>
-            <div>
-                <input type="text" id="txid" name="txid">
-                <button type="submit" onclick="pay(event)">Enviar</button>
-            </div>
-        </div>
-    </form>
+    <div class="field">
+        <label for="txid">TXID</label>
+        <input type="text" id="txid" name="txid" required="required">
+        <button type="button" onclick="connect()">Gerar PIX</button>
+        <div id="messages"></div>
+    </div>
 </main>
 <script src="/static/js/main.js"></script>
 </body>

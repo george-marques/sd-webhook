@@ -1,32 +1,36 @@
 package br.unitins.sd.webhook.socket;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.websocket.OnClose;
+import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/websocket")
-@ApplicationScoped
+@Slf4j
+@ServerEndpoint("/pix/{txid}")
 public class WebSocket {
-    Map<String, Session> sessions = new ConcurrentHashMap<>();
+
+    public static final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     @OnOpen
-    public void onOpen(Session session) {
-        sessions.put(session.getId(), session);
+    public void onOpen(Session session, @PathParam("txid") String txid) {
+        sessions.put(txid, session);
+        log.info("Nova conexão: txid {}", txid);
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        log.info("Mensagem recebida: {}", message);
     }
 
     @OnClose
-    public void onClose(Session session) {
-        sessions.remove(session.getId());
-    }
-
-    public void sendNotification(String message) {
-        sessions.values().forEach(session -> {
-            session.getAsyncRemote().sendText(message);
-        });
+    public void onClose(Session session, @PathParam("txid") String txid) {
+        sessions.remove(txid);
+        log.info("Conexão fechada: txid {}", txid);
     }
 }

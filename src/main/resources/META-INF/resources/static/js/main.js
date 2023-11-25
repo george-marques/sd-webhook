@@ -1,48 +1,25 @@
-const socket = new WebSocket('ws://localhost:8080/websocket');
+let ws;
 
-socket.addEventListener('open', (event) => {
-    console.log('Conexão aberta:', event);
-    socket.send('Olá, servidor!');
-});
+function connect() {
+    const txid = document.getElementById("txid").value
+    ws = new WebSocket("ws://localhost:8080/pix/" + txid);
 
-socket.addEventListener('message', (event) => {
-    console.log('Mensagem recebida do servidor:', event.data);
-});
+    ws.onopen = function () {
+        console.log("Conexão aberta para TabID:", txid);
+    };
 
-socket.addEventListener('error', (event) => {
-    console.error('Erro na conexão:', event);
-});
+    ws.onmessage = function (event) {
+        displayMessage(event.data)
+    };
 
-socket.addEventListener('close', (event) => {
-    if (event.wasClean) {
-        console.log('Conexão fechada de forma limpa, código:', event.code, 'razão:', event.reason);
-    } else {
-        console.error('Conexão fechada de forma abrupta');
-    }
-});
+    ws.onclose = function () {
+        console.warn("Conexão fechada");
+    };
+}
 
-function pay(e) {
-    e.preventDefault()
-    const txidElement = document.getElementById("txid");
-    const txid = txidElement.value;
-
-    return fetch("http://localhost:8080/api/webhook", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(txid),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Erro na solicitação POST');
-            }
-            return response.json();
-        })
-        .then((responseData) => {
-            return responseData;
-        })
-        .catch((error) => {
-            throw error;
-        });
+function displayMessage(message) {
+    const messageDiv = document.getElementById("messages");
+    const messageElement = document.createElement("p");
+    messageElement.textContent = "Mensagem recebida: " + message;
+    messageDiv.appendChild(messageElement);
 }
